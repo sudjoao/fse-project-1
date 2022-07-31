@@ -3,7 +3,7 @@ from trafic_light import TraficLight
 class TraficLightController:
     def __init__(self, gpio, lights: list):
         self.gpio = gpio
-        self.states = ['001001', '100001', '010001', '001001', '001100', '001010', '001001']
+        self.states = ['001001', '100001', '010001', '001001', '001100', '001010']
         self.lights = lights.copy()
         self.current_state_index = 0
         self.min_time_locked = True
@@ -70,3 +70,16 @@ class TraficLightController:
             self.current_state_index+=1
         else:
             self.current_state_index = 0
+    
+    def is_red(self, port):
+        if self.current_state_index == 0 or self.current_state_index == 3:
+            return True
+        if port == 18:
+            main_red_states = ['001100', '001010']
+            return self.current_state_index in main_red_states
+        if port == 24:
+            secondary_red_states = ['100001', '010001']
+            return self.current_state_index in secondary_red_states
+    
+    def get_min_time_locked(self):
+        return self.min_time_locked

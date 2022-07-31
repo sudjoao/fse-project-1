@@ -12,6 +12,8 @@ def main():
     GPIO.setup(main_controller.buttons, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(main_controller.speed_sensors[0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     GPIO.setup(main_controller.speed_sensors[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(main_controller.pass_sensors[0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(main_controller.pass_sensors[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
     main_controller.config()
     main_controller.run_lights()
 
