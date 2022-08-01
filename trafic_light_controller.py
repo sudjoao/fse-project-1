@@ -7,60 +7,69 @@ class TraficLightController:
         self.lights = lights.copy()
         self.current_state_index = 0
         self.min_time_locked = True
-    
-    def turn_off_lights_list(self, lights):
-        for light in lights:
-            self.gpio.output(light, self.gpio.LOW)
 
-    def turn_on_lights_list(self, lights):
-        for light in lights:
-            self.gpio.output(light, self.gpio.HIGH)
+    def turn_trafic_lights(self, trafic_type, turn, red=False, yellow=False, green=False):
+        if trafic_type == 'main':
+            trafic1 = 0
+        else:
+            trafic1 = 1
+        if turn == 'off':
+            turn_type = self.gpio.LOW
+        else:
+            turn_type = self.gpio.HIGH
+        if red:
+            self.gpio.output(self.lights[trafic1].red_light.port, turn_type)
+        if yellow:
+            self.gpio.output(self.lights[trafic1].yellow_light.port, turn_type)
+        if yellow:
+            self.gpio.output(self.lights[trafic1].green_light.port, turn_type)
+
 
     def turn_off_all_lights(self):
-            self.turn_off_lights_list([
-                self.lights[0].green_light.port,
-                self.lights[1].green_light.port,
-                self.lights[0].yellow_light.port,
-                self.lights[1].yellow_light.port,
-                self.lights[0].red_light.port,
-                self.lights[1].red_light.port,
-            ])
+            self.turn_trafic_lights('main', 'off', red=True, yellow=True, green=True)
+            self.turn_trafic_lights('secondary', 'off', red=True, yellow=True, green=True)
             time.sleep(1)
 
     def turn_on_lights(self):
         if self.states[self.current_state_index] == '001001':
-            self.turn_off_lights_list([self.lights[0].yellow_light.port, self.lights[1].yellow_light.port])
-            self.turn_on_lights_list([self.lights[0].red_light.port, self.lights[1].red_light.port])
+            self.turn_trafic_lights('main',turn='on',  red=True)
+            self.turn_trafic_lights('secondary',turn='on', red=True)
+            self.turn_trafic_lights('main',turn='off',  yellow=True, green=True)
+            self.turn_trafic_lights('secondary',turn='off', yellow=True, green=True)
             time.sleep(1)
             self.min_time_locked = False
             
         elif self.states[self.current_state_index] == '100001':
-            self.turn_off_lights_list([self.lights[0].red_light.port])
-            self.turn_on_lights_list([self.lights[0].green_light.port, self.lights[1].red_light.port])
+            self.turn_trafic_lights('main',turn='off', red=True)
+            self.turn_trafic_lights('main',turn='on', green=True)
+            self.turn_trafic_lights('secondary',turn='on', red=True)
             self.min_time_locked = True
             time.sleep(self.lights[0].green_light.min_time)
             self.min_time_locked = False
             time.sleep(self.lights[0].green_light.max_time - self.lights[0].green_light.min_time)
     
         elif self.states[self.current_state_index] == '010001':
-            self.turn_off_lights_list([self.lights[0].green_light.port])
-            self.turn_on_lights_list([self.lights[0].yellow_light.port, self.lights[1].red_light.port])
+            self.turn_trafic_lights('main',turn='off', green=True)
+            self.turn_trafic_lights('main',turn='on', yellow=True)
+            self.turn_trafic_lights('secondary',turn='on', red=True)
             self.min_time_locked = True
             time.sleep(self.lights[0].yellow_light.min_time)
             self.min_time_locked = False
             time.sleep(self.lights[0].yellow_light.max_time - self.lights[0].yellow_light.min_time)
 
-        elif self.states[self.current_state_index] == '001100': 
-            self.turn_off_lights_list([self.lights[1].red_light.port])
-            self.turn_on_lights_list([self.lights[1].green_light.port, self.lights[0].red_light.port])
+        elif self.states[self.current_state_index] == '001100':
+            self.turn_trafic_lights('main',turn='on', red=True)
+            self.turn_trafic_lights('secondary',turn='on', green=True) 
+            self.turn_trafic_lights('secondary',turn='off', red=True)
             self.min_time_locked = True
             time.sleep(self.lights[1].green_light.min_time)
             self.min_time_locked = False
             time.sleep(self.lights[1].green_light.max_time - self.lights[1].green_light.min_time)
 
         elif self.states[self.current_state_index] == '001010':
-            self.turn_off_lights_list([self.lights[1].green_light.port])
-            self.turn_on_lights_list([self.lights[1].yellow_light.port, self.lights[0].red_light.port])
+            self.turn_trafic_lights('main',turn='on', red=True)
+            self.turn_trafic_lights('secondary',turn='on', yellow=True) 
+            self.turn_trafic_lights('secondary',turn='off', green=True)
             self.min_time_locked = True
             time.sleep(self.lights[1].yellow_light.min_time)
             self.min_time_locked = False
