@@ -44,7 +44,7 @@ class MainController:
         for i, sensors in enumerate(self.speed_sensors):
             for sensor in sensors:
                 self.gpio.add_event_detect(sensor, self.gpio.RISING, self.speed_controllers[i].speed_callback)
-
+        self.trafic_light_controller.turn_off_all_lights()
     def button_callback(self, button):
         while self.trafic_light_controller.min_time_locked:
             print('travado')
