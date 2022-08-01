@@ -38,23 +38,32 @@ class MainController:
         for button in self.buttons:
             self.gpio.add_event_detect(button, self.gpio.RISING, self.button_callback)
         for sensors in self.speed_sensors:
-            self.speed_controllers.append(SpeedController(*sensors,  self.trafic_light_controller.is_red))
-        for sensor in self.pass_sensors: 
+            self.speed_controllers.append(SpeedController(self.trafic_light_controller.is_red))
+        for sensor in self.pass_sensors:
             self.gpio.add_event_detect(sensor, self.gpio.RISING, self.button_callback)
         for i, sensors in enumerate(self.speed_sensors):
             for sensor in sensors:
-                self.gpio.add_event_detect(sensor, self.gpio.FALLING, self.speed_controllers[i].speed_callback)
+                self.gpio.add_event_detect(sensor, self.gpio.RISING, self.speed_controllers[i].speed_callback)
 
     def button_callback(self, button):
         while self.trafic_light_controller.min_time_locked:
             print('travado')
         print('destravou')
-        self.trafic_light_controller.turn_off_all_lights()
+        self.trafic_light_controller.turn_off_all_lights() 
         if button == 8 or button == 14:
             self.trafic_light_controller.current_state_index = 2
         else:
             self.trafic_light_controller.current_state_index = 5
-    
+        self.gpio.remove_event_detect(button)
+        self.gpio.add_event_detect(button, self.gpio.FALLING, self.button_callback_down)
+
+    def button_callback_down(self, button):
+        if self.trafic_light_controller.is_red(button):
+            print('furou o sinal vermelho')
+        self.gpio.remove_event_detect(button)
+        self.gpio.add_event_detect(button, self.gpio.RISING, self.button_callback)
+
+
     def run_lights(self):
         while True:
             self.trafic_light_controller.turn_on_lights()

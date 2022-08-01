@@ -74,12 +74,13 @@ class TraficLightController:
     def is_red(self, port):
         if self.current_state_index == 0 or self.current_state_index == 3:
             return True
+        print(port)
         if port == 18:
             main_red_states = ['001100', '001010']
-            return self.current_state_index in main_red_states
+            return self.states[self.current_state_index] in main_red_states
         if port == 24:
             secondary_red_states = ['100001', '010001']
-            return self.current_state_index in secondary_red_states
+            return self.states[self.current_state_index] in secondary_red_states
     
     def get_min_time_locked(self):
         return self.min_time_locked
