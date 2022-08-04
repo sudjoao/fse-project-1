@@ -3,7 +3,7 @@ import socket
 import threading
 
 HEADER = 1024
-PORT = 5052
+PORT = 10231
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
