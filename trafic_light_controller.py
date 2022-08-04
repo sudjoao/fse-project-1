@@ -108,17 +108,18 @@ class TraficLightController:
             self.current_state_index = 0
     
     def is_red(self, port):
+        self.client.send_car_pass()
         if self.current_state_index == 0 or self.current_state_index == 3:
-            self.client.send_json({'type': 'red_light'})
+            self.client.send_json_thread({'type': 'red_light'})
             return True
         print(port)
         if port == 18 or port == 22:
             main_red_states = ['001100', '001010']
-            self.client.send_json({'type': 'red_light'})
+            self.client.send_json_thread({'type': 'red_light'})
             return self.states[self.current_state_index] in main_red_states
         if port == 24 or port == 19:
             secondary_red_states = ['100001', '010001']
-            self.client.send_json({'type': 'red_light'})
+            self.client.send_json_thread({'type': 'red_light'})
             return self.states[self.current_state_index] in secondary_red_states
     
     def get_min_time_locked(self):

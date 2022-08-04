@@ -1,9 +1,10 @@
+from datetime import datetime
 import json
 import socket
 import threading
 
 HEADER = 1024
-PORT = 5051
+PORT = 5052
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
@@ -20,6 +21,7 @@ class CentralServer:
         self.speed_cars = 0   
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.bind(ADDR) 
+        self.start_time = datetime.now()
 
     def handle_client(self, conn, addr):
         print(f'[NEW CONNECTION] {addr} connected')
@@ -34,6 +36,8 @@ class CentralServer:
                 self.red_cars+=1
             elif msg['type'] == 'fast_car':
                 self.fast_cars+=1
+            elif msg['type'] == 'car_speed':
+                self.speed_cars+=msg['speed']
 
 
     def start(self):
@@ -51,7 +55,8 @@ class CentralServer:
             while option != '1' and option != '2' and option != '3' and option != '4' and option != '5':
                 option = input('Opção inválida. Digite uma das seguintes opções:\n1. Verificar carros por minuto\n2. Verificar velocidade média\n3.Números de Infrações\n4. Modo de emergência\n5. Modo noturno\n')
             if option == '1':
-                print(f'Quantidade de carros que passaram nos últimos minutos: {self.car_pass}')
+                minutes = datetime.now() - self.start_time
+                print(f'Quantidade de carros que passaram por minuto: {self.car_pass/ (1+(minutes.total_seconds()//60))}')
             elif option == '2':
                 print(f'Velocidade média: {self.speed_cars / self.car_pass}')
             elif option == '3':

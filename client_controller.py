@@ -3,7 +3,7 @@ import socket
 import threading
 
 HEADER = 1024
-PORT = 5051
+PORT = 5052
 FORMAT = 'utf-8'
 DISCONNECT_MESSAGE = "!DISCONNECT"
 
@@ -29,4 +29,11 @@ class ClientController:
         self.client.sendall(bytes(data, encoding=FORMAT))
     
     def send_very_fast_cart(self):
-        self.send_json_thread({'type': 'fast_cars'})
+        self.send_json_thread({'type': 'fast_car'})
+    
+    def send_car_pass(self):
+        self.send_json_thread({'type': 'car_pass'})
+    
+    def inform_car_speed(self, dict):
+        self.send_json_thread(dict)
+

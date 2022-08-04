@@ -3,11 +3,12 @@ import time
 
 
 class SpeedController:
-    def __init__(self, is_red, send_fast_car_infract) -> None:
+    def __init__(self, is_red, inform_car_speed, send_fast_car_infract) -> None:
         self.sensor_time = 0
         self.is_red = is_red
         self.cars_qtt = 0
         self.red_pass_qtt = 0
+        self.inform_car_speed = inform_car_speed
         self.send_fast_car_infract = send_fast_car_infract
 
     def speed_callback(self, button):
@@ -27,6 +28,7 @@ class SpeedController:
         time_difference = time- self.sensor_time # s
         velocity_in_ms = 1 / time_difference.total_seconds() # 1 m/ s
         velocity_in_kmh = int(velocity_in_ms * 3.6)
+        self.inform_car_speed({'type': 'car_speed', 'speed': velocity_in_kmh})
         if velocity_in_kmh > 60:
             print('Ultrapassou o limite da via')
             self.send_fast_car_infract()
