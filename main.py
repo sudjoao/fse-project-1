@@ -1,3 +1,4 @@
+import threading
 import time
 from light import Light
 from main_controller import MainController
@@ -10,6 +11,7 @@ def main():
         option = input('Opção inválida. Digite 1 para GPIO 1 e 2 para GPIO 2')
     main_controller = MainController(int(option))
     main_controller.config()
-    main_controller.run_lights()
+    trafic_light_thread = threading.Thread(target=main_controller.run_lights, args=[])
+    trafic_light_thread.start()
 
 main()

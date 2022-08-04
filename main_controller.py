@@ -45,7 +45,7 @@ class MainController:
         for button in self.buttons:
             GPIO.add_event_detect(button, GPIO.RISING, self.button_callback)
         for sensors in self.speed_sensors:
-            self.speed_controllers.append(SpeedController(self.trafic_light_controller.is_red))
+            self.speed_controllers.append(SpeedController(self.trafic_light_controller.is_red, self.trafic_light_controller.client.send_very_fast_cart))
         for sensor in self.pass_sensors:
             GPIO.add_event_detect(sensor, GPIO.RISING, self.button_callback)
         for i, sensors in enumerate(self.speed_sensors):

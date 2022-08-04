@@ -1,4 +1,5 @@
 import time
+from client_controller import ClientController
 from trafic_light import TraficLight
 class TraficLightController:
     def __init__(self, gpio, lights: list):
@@ -8,6 +9,7 @@ class TraficLightController:
         self.current_state_index = 0
         self.min_time_locked = True
         self.button_was_pressed = False
+        self.client = ClientController()
 
     def turn_trafic_lights(self, trafic_type, turn, red=False, yellow=False, green=False):
         if trafic_type == 'main':
@@ -107,13 +109,16 @@ class TraficLightController:
     
     def is_red(self, port):
         if self.current_state_index == 0 or self.current_state_index == 3:
+            self.client.send_json({'type': 'red_light'})
             return True
         print(port)
         if port == 18 or port == 22:
             main_red_states = ['001100', '001010']
+            self.client.send_json({'type': 'red_light'})
             return self.states[self.current_state_index] in main_red_states
         if port == 24 or port == 19:
             secondary_red_states = ['100001', '010001']
+            self.client.send_json({'type': 'red_light'})
             return self.states[self.current_state_index] in secondary_red_states
     
     def get_min_time_locked(self):
