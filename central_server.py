@@ -27,8 +27,6 @@ class CentralServer:
         print(f'[NEW CONNECTION] {addr} connected')
         while True:
             json_msg = conn.recv(HEADER).decode(FORMAT)
-            print(f'json_msg: {json_msg}')
-            print(type(json_msg))
             msg = json.loads(json_msg)
             if msg['type'] == 'car_pass':
                 self.car_pass+=1
@@ -47,7 +45,6 @@ class CentralServer:
             conn, addr = self.server.accept()
             thread = threading.Thread(target=self.handle_client, args=(conn, addr))
             thread.start()
-            print(f'[ACTIVES CONNECTIONS] {threading.active_count() - 1}')
 
     def menu(self):
         while True:
