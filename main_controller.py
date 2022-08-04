@@ -8,10 +8,8 @@ class MainController:
     def __init__(self, config) -> None:
         GPIO.setmode(GPIO.BCM)
         self.lights_ports = [1, 26, 21, 20, 16, 12] if config == 1 else [2, 3, 11, 0, 5, 6]
-        # self.lights_min_times = [10, 3, 5, 5, 3, 1]
-        # self.lights_max_times = [20, 3, 10, 10, 3, 20]
-        self.lights_min_times = [3, 3, 2, 2, 3, 1]
-        self.lights_max_times = [5, 3, 3, 3, 3, 2]
+        self.lights_min_times = [10, 3, 5, 5, 3, 1]
+        self.lights_max_times = [20, 3, 10, 10, 3, 20]
         self.buttons = [8, 7]if config == 1 else [10, 9]
         self.speed_sensors = [[23, 18], [25, 24]] if config == 1 else [[27, 22], [13, 19]]
         self.pass_sensors = [14, 15] if config == 1 else  [4, 17]
